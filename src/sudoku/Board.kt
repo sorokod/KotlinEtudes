@@ -7,7 +7,7 @@ package sudoku
 
 import java.io.PrintStream
 
-class Cell(val x: Int, val y: Int)
+data class Cell(val x: Int, val y: Int)
 
 private val noCell = Cell(-1, -1)
 
