@@ -12,7 +12,7 @@ fun fromFile(filePath: String): Board {
 }
 
 fun fromMultiFile(filePath: String): List<Board> {
-    var key: String
+    var key: String = ""
     fun keyFor(line: String): String {
         if (line.contains("Grid")) key = line
         return key
@@ -45,11 +45,11 @@ fun fromList(rows: List<String>): Board {
 fun main(args: Array<String>) {
     val solver = Solver()
 
-    val board = fromFile("E:\\code\\mine\\KotlinEtudes\\resources\\sudoku-difficult.txt")
+    val board = fromFile("resources/sudoku-difficult.txt")
     solver.solve(board)
     board.print(System.out)
 
-    fromMultiFile("E:\\code\\mine\\KotlinEtudes\\resources\\p096_sudoku.txt").forEach {
+    fromMultiFile("resources/p096_sudoku.txt").forEach {
         solver.solve(it)
         it.print(System.out)
     }
