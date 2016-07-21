@@ -3,7 +3,7 @@ package bst
 import bst.Bst.*
 
 /**
- *
+ * Bst recursive search search
  */
 fun <T : Comparable<T>> search(tree: Bst<T>, value: T): Bst<T> =
         when (tree) {
@@ -15,3 +15,18 @@ fun <T : Comparable<T>> search(tree: Bst<T>, value: T): Bst<T> =
             }
         }
 
+/**
+ * Bst non recursive search
+ */
+fun <T : Comparable<T>> searchNR(tree: Bst<T>, value: T): Bst<T> {
+    var result = tree
+
+    while (result is Node && result.value != value) {
+        when (value.compareTo(result.value)) {
+            -1 -> result = result.left
+            else -> result = result.right
+        }
+    }
+
+    return result
+}
