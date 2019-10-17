@@ -15,14 +15,12 @@ fun sigmaRecursive(f: (Int) -> Int): (Int, Int) -> Int {
 }
 
 
-fun sigma(f: (Int) -> Int): (IntRange) -> Int {
-    fun applyF(range: IntRange): Int {
-        var result = 0
-        for (i in range) result += f(i)
-        return result
-    }
-    return ::applyF
-}
+fun sigma(f: (Int) -> Int): (IntRange) -> Int =
+        { range: IntRange ->
+            var result = 0
+            for (i in range) result += f(i)
+            result
+        }
 
 
 fun lookUp(db: Map<String, String>): (String) -> String? {
