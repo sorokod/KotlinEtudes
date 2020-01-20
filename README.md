@@ -1,8 +1,11 @@
 # KotlinEtudes 
 
-## A sudoku solver
+## Sudoku solver
+
 ## Language
 Test driving various language features such as currying and class delegation
+
+## DSL examples 
 
 ## Language.Complex
 A complex number implementation + a little Mandelbrot set driver:
