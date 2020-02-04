@@ -18,16 +18,6 @@ fun valid(q1: Queen, q2: Queen): Boolean =
             else -> true
         }
 
-fun printSolution() {
-    val board = IntArray(N * N)
-    queens.forEach { board[it.row * N + it.col] = 1 }
-
-    board.forEachIndexed { i, k ->
-        if (i.rem(N) == 0) println()
-        print("$k ")
-    }
-}
-
 fun solve(col: Int): Boolean {
     if (queens.size == N) {
         return true
@@ -47,6 +37,16 @@ fun solve(col: Int): Boolean {
         }
     }
     return false
+}
+
+fun printSolution() {
+    val board = IntArray(N * N)
+    queens.forEach { board[it.row * N + it.col] = 1 }
+
+    board.forEachIndexed { i, k ->
+        if (i.rem(N) == 0) println()
+        print("$k ")
+    }
 }
 
 fun main() {
