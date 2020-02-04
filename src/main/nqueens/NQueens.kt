@@ -28,7 +28,6 @@ fun printSolution() {
     }
 }
 
-
 fun solve(col: Int): Boolean {
     if (queens.size == N) {
         return true

@@ -1,6 +1,8 @@
 # KotlinEtudes 
 
-## Sudoku solver
+## Sudoku 
+
+## N Queens
 
 ## Language
 Test driving various language features such as currying and class delegation
