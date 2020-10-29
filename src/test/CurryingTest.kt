@@ -1,7 +1,7 @@
-import junit.framework.Assert.assertEquals
 import language.lookUp
 import language.sigma
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class CurryingTest {
 

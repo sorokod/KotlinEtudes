@@ -2,10 +2,9 @@ import bst.Bst
 import bst.Bst.Empty
 import bst.Bst.Node
 import bst.*
-import org.junit.Assert
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 import java.lang.Math.max
 import java.lang.Math.min
 
@@ -13,8 +12,8 @@ import java.lang.Math.min
 class TestBst {
 
     val tree0 = Node(5,
-                Node(3),
-                Node(7,
+            Node(3),
+            Node(7,
                     Node(6),
                     Node(9))
     )
@@ -39,10 +38,10 @@ class TestBst {
 
     @Test
     fun testDepth() {
-        assertEquals("Unexpected max depth", 2,  tree0.depth { x, y -> max(x,y)  } )
-        assertEquals("Unexpected min depth", 1,  tree0.depth { x, y -> min(x,y)  } )
+        assertEquals(2, tree0.depth { x, y -> max(x, y) }, "Unexpected max depth")
+        assertEquals(1, tree0.depth { x, y -> min(x, y) }, "Unexpected min depth")
     }
 
-    private fun assertNode(match: Bst<Int>, value: Int) = assertTrue( match is Node && match.value == value )
-    private fun assertEmpty(match: Bst<Int>) = assertTrue( match is Empty )
+    private fun assertNode(match: Bst<Int>, value: Int) = assertTrue(match is Node && match.value == value)
+    private fun assertEmpty(match: Bst<Int>) = assertTrue(match is Empty)
 }

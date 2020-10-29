@@ -1,7 +1,7 @@
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
 import language.functional.quickSort
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
 class QuicksortTest {
