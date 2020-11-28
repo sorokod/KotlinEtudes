@@ -8,7 +8,7 @@
 
 
     <properties>
-        <kotlin.version>1.4.10</kotlin.version>
+        <kotlin.version>1.4.20</kotlin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <maven.compiler.source>11</maven.compiler.source>
@@ -48,6 +48,13 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <args>
+                        <arg>
+                            -Xopt-in=kotlin.time.ExperimentalTime
+                        </arg>
+                    </args>
+                </configuration>
             </plugin>
         </plugins>
     </build>
