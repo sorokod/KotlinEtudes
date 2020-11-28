@@ -10,29 +10,15 @@ class BinaryHeap<T : Comparable<T>>(initialCapacity: Int = 100) {
 
     private val tree = CompleteBinaryTree<T>(initialCapacity)
 
+    fun add(value: T) = tree.addLeaf(value).also { bubbleUp(index = size()) }
 
-    fun add(value: T) {
-        tree.addLeaf(value)
-        bubbleUp(index = size())
-    }
-
-
-    fun remove(): T {
-        val result = tree.removeRoot()
-        bubbleDown(1)
-
-        return result
-    }
-
+    fun remove(): T = tree.removeRoot().also { bubbleDown(index = 1) }
 
     fun isEmpty() = tree.isEmpty()
 
-
     fun size() = tree.size()
 
-
     override fun toString() = tree.toString()
-
 
     /**
      * Performs the "bubble up" operation to place a newly inserted element
@@ -47,7 +33,6 @@ class BinaryHeap<T : Comparable<T>>(initialCapacity: Int = 100) {
         tree.swapWithParent(index)
         bubbleUp(tree.indexOf(index, PARENT))
     }
-
 
     private tailrec fun bubbleDown(index: Int) {
         val smallestIndex = tree.min(index)

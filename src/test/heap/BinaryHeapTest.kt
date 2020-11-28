@@ -86,6 +86,5 @@ internal class BinaryHeapTest {
                 data.contentEquals(sortedData),
                 "expected: ${data.contentToString()} \n\tgot: ${sortedData.contentToString()}"
         )
-
     }
 }

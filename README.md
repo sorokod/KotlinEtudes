@@ -1,6 +1,8 @@
 # KotlinEtudes 
 
 ## Binary Heap
+A [binary heap](https://github.com/sorokod/KotlinEtudes/blob/4bca6b50f12fbdcb1c86905c94b255aab8ef8349/src/main/heap/BinaryHeap.kt#L9) backed by an array based binary tree.
+
 
 ```kotlin
         val heap = BinaryHeap<Int>()

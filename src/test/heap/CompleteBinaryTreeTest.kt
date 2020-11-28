@@ -15,6 +15,7 @@ internal class CompleteBinaryTreeTest {
     fun `creation test`() {
         assertTrue(subject.isEmpty())
         assertTrue(subject.isRoot(1))
+        assertEquals(0, subject.size())
     }
 
     @Test
@@ -22,6 +23,7 @@ internal class CompleteBinaryTreeTest {
         values_3.forEach { subject.addLeaf(it) }
 
         assertFalse(subject.isEmpty())
+        assertEquals(values_3.size, subject.size())
         values_3.forEach { assertEquals(it, subject.value(it)) }
     }
 
@@ -35,19 +37,23 @@ internal class CompleteBinaryTreeTest {
     @Test
     fun `removeRoot() test`() {
         values_3.forEach { subject.addLeaf(it) } // [null, 1, 2, 3, null,...
+        assertEquals(3, subject.size())
 
         subject.removeRoot().let { // [null, 3, 2, null, ...
+            assertEquals(2, subject.size())
             assertEquals(1, it)
             assertEquals(3, subject.value(1))
             assertEquals(2, subject.value(2))
         }
 
         subject.removeRoot().let {// [null, 2, null, ...
+            assertEquals(1, subject.size())
             assertEquals(3, it)
             assertEquals(2, subject.value(1))
         }
 
         subject.removeRoot().let {// [null, null, ...
+            assertEquals(0, subject.size())
             assertEquals(2, it)
             assertTrue(subject.isEmpty())
         }

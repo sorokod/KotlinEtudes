@@ -66,12 +66,12 @@ internal class CompleteBinaryTree<T : Comparable<T>>(initialCapacity: Int) {
         var smallestIndex = index
 
         val leftIndex = indexOf(index, LEFT)
-        if (leftIndex <= elementCount && value(leftIndex)!! < value(smallestIndex)!!) {
+        if (leftIndex <= elementCount && value(leftIndex) < value(smallestIndex)) {
             smallestIndex = leftIndex
         }
 
         val rightIndex = indexOf(index, RIGHT)
-        if (rightIndex <= elementCount && value(rightIndex)!! < value(smallestIndex)!!) {
+        if (rightIndex <= elementCount && value(rightIndex) < value(smallestIndex)) {
             smallestIndex = rightIndex
         }
 
