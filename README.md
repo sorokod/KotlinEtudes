@@ -1,5 +1,18 @@
 # KotlinEtudes 
 
+### Password Generator
+
+An example of a partial function application
+```kotlin
+/**
+ * Given an Alphabet, returns a function of N that returns a list of N characters of the alphabet
+ */
+typealias Alphabet = CharArray
+
+val charGenerator: (Alphabet) -> (Int) -> List<Char> =
+        { alphabet: Alphabet -> { count: Int -> (1..count).map { alphabet[Random.nextInt(0, alphabet.size)] } } }
+```
+
 ## Binary Heap
 A [binary heap](https://github.com/sorokod/KotlinEtudes/blob/4bca6b50f12fbdcb1c86905c94b255aab8ef8349/src/main/heap/BinaryHeap.kt#L9) backed by an array based binary tree.
 
