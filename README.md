@@ -2,7 +2,7 @@
 
 ### Password Generator
 
-An example of a partial function application
+An example of a [partial function application](https://github.com/sorokod/KotlinEtudes/blob/2230e729523c954aba586604c2be1be6675d30b3/src/main/passwordgenerator/PasswordGenerator.kt#L19)
 ```kotlin
 /**
  * Given an Alphabet, returns a function of N that returns a list of N characters of the alphabet
