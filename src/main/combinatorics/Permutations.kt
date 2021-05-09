@@ -3,6 +3,17 @@ package combinatorics
 import java.lang.StringBuilder
 
 
+fun permutations1(str: String, accumulate: String = ""): List<String> {
+    return when (str.isEmpty()) {
+        true -> listOf(accumulate)
+        false -> {
+            str.flatMapIndexed { i, c ->
+                permutations1(str.removeRange(i, i + 1), accumulate + c)
+            }
+        }
+    }
+}
+
 /**
  * Permute a s String by permuting it's tail and then expanding the result
  * with the head character.
@@ -39,4 +50,10 @@ fun main() {
     println(permutations("12"))  // [12, 21]
     println(permutations("1"))   // [1]
     println(permutations(""))    // []
+
+    println(permutations1("123")) // [123, 132, 213, 231, 312, 321]
+    println(permutations1("12"))  // [12, 21]
+    println(permutations1("1"))   // [1]
+    println(permutations1(""))    // []
+
 }
