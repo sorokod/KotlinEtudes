@@ -2,15 +2,18 @@
 
 ### Password Generator
 
-An example of a [partial function application](https://github.com/sorokod/KotlinEtudes/blob/2230e729523c954aba586604c2be1be6675d30b3/src/main/passwordgenerator/PasswordGenerator.kt#L19)
+An example of a [partial function application](https://github.com/sorokod/KotlinEtudes/blob/master/src/main/passwordgenerator/PasswordGenerator.kt)
 ```kotlin
-/**
- * Given an Alphabet, returns a function of N that returns a list of N characters of the alphabet
- */
 typealias Alphabet = CharArray
 
+/**
+ * Given an Alphabet, returns a function that
+ * given an int N return a list of N random characters from that Alphabet
+ */
 val charGenerator: (Alphabet) -> (Int) -> List<Char> =
-        { alphabet: Alphabet -> { count: Int -> (1..count).map { alphabet[Random.nextInt(0, alphabet.size)] } } }
+    { alphabet: Alphabet ->
+        { count: Int -> (1..count).map { alphabet[Random.nextInt(0, alphabet.size)] } }
+    }
 ```
 
 ## Binary Heap
