@@ -1,5 +1,8 @@
 package heap
 
+/**
+ * A min heap implementation, see: https://en.wikipedia.org/wiki/Min-max_heap
+ */
 class BinHeap<T : Comparable<T>>(initialCapacity: Int = 100) {
 
     private val tree = CompleteBinTree<T>(initialCapacity)
@@ -41,14 +44,13 @@ class BinHeap<T : Comparable<T>>(initialCapacity: Int = 100) {
 
 
 /**
- * A "complete binary with" an array representation (see indexOfXXX() functions) . Elements are populated from index = 1
+ * A "complete binary tree" with an array representation (see indexOfXXX() functions) . Elements are populated
+ * from index = 1
  *
  * It is a binary tree in which all the levels are completely filled except possibly
  * the lowest one, which is filled from the "right".
  */
-private class CompleteBinTree<T : Comparable<T>>(initialCapacity: Int) {
-
-    private enum class IndexType { LEFT, RIGHT, PARENT }
+internal class CompleteBinTree<T : Comparable<T>>(initialCapacity: Int) {
 
     private var elementCount = 0
     private var array: Array<T?> = arrayOfNulls<Comparable<T>>(initialCapacity) as Array<T?>
@@ -110,8 +112,7 @@ private class CompleteBinTree<T : Comparable<T>>(initialCapacity: Int) {
     }
 
 
-    fun indexOfParent(current: Int) = current / 2
-    fun indexOfLeft(current: Int) = current * 2
-    fun indexOfRight(current: Int) = current * 2 + 1
-
+    internal fun indexOfParent(current: Int) = current / 2
+    internal fun indexOfLeft(current: Int) = current * 2
+    internal fun indexOfRight(current: Int) = current * 2 + 1
 }

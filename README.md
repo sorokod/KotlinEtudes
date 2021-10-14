@@ -17,23 +17,25 @@ val charGenerator: (Alphabet) -> (Int) -> List<Char> =
 ```
 
 ## Binary Heap
-A [binary heap](https://github.com/sorokod/KotlinEtudes/blob/4bca6b50f12fbdcb1c86905c94b255aab8ef8349/src/main/heap/BinaryHeap.kt#L9) backed by an array based binary tree.
+A [binary heap](https://github.com/sorokod/KotlinEtudes/blob/master/src/main/heap/BinHeap.kt) backed by an array based 
+binary tree.
 
 
 ```kotlin
-        val heap = BinaryHeap<Int>()
-        val randomData = Array(1_000) { random.nextInt(100) }
+        val minHeap = BinHeap<Int>()
+        val data = Array(1_000) { Random.nextInt(-1_000, 1_000) }
 
         // add data to heap
-        randomData.onEach { value -> heap.add(value) }
-
-        // remove (sorted) data from heap
-        val sorted = mutableListOf<Int>()
-        while(!heap.isEmpty()) {
-            sorted.add(heap.remove())
+        data.forEach { minHeap.add(it) }.apply {
+            assertTrue(minHeap.size() == data.size)
         }
 
-        assertEquals(sorted, randomData.toList().sorted())
+        // remove all the elements from the heap and verify that the 
+        // result is sorted
+        List(minHeap.size()) { minHeap.remove() }.apply {
+            assertTrue(minHeap.isEmpty())
+            assertEquals(data.sorted(), this)
+        }
 ```
 
 ## Sudoku 
