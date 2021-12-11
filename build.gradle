@@ -1,0 +1,51 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.5.32'
+    id 'java'
+}
+
+ext {
+    java_version = 11
+    junit_version = "5.8.2"
+}
+
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+
+
+    group 'org.xor'
+    version '1.0-SNAPSHOT'
+
+
+    repositories {
+        mavenCentral()
+    }
+
+    sourceCompatibility = java_version
+    compileKotlin {
+        kotlinOptions.jvmTarget = java_version
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = java_version
+    }
+    test {
+        useJUnitPlatform()
+    }
+
+
+
+    dependencies {
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
+        testImplementation 'org.junit.jupiter:junit-jupiter-params:$junit_version'
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
+    }
+}
+//
+//dependencies {
+////    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+////    implementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+////    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+////    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+//}
+

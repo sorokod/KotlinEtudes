@@ -1,0 +1,4 @@
+rootProject.name = 'Etudes'
+
+include 'misc'
+include 'module2'
