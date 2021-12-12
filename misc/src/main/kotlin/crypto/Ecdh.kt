@@ -26,7 +26,7 @@ class Ecdh {
      *
      * See also: https://docs.oracle.com/en/java/javase/13/security/oracle-providers.html#GUID-091BF58C-82AB-4C9C-850F-1660824D5254
      */
-    private inline fun gen_ECDH_keyPair(): KeyPair =
+    private fun gen_ECDH_keyPair(): KeyPair =
             KeyPairGenerator.getInstance("EC")
                     .also { kpGen -> kpGen.initialize(256) }
                     .let { kpGen -> kpGen.generateKeyPair() }
@@ -67,7 +67,7 @@ class Ecdh {
      * A more sophisticated key derivation function, such as HKDF, can be used to derive further keys (for instance,
      * separate keys sending data in each direction, which is recommended).
      */
-    private inline fun deriveKey(sharedSecret: ByteArray, pubKey1: ByteArray, pubKey2: ByteArray): ByteArray {
+    private fun deriveKey(sharedSecret: ByteArray, pubKey1: ByteArray, pubKey2: ByteArray): ByteArray {
         val sortedPubKeys = listOf(pubKey1, pubKey2).sortedWith { a, b -> Arrays.compare(a, b) }
         return with(MessageDigest.getInstance("SHA-256")) {
             update(sharedSecret)

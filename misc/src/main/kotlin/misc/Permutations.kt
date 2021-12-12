@@ -37,7 +37,7 @@ fun permutations(str: String): List<String> {
  *      "23".expandWith('1') => [123 213 231]
  *      "".expandWith('1')   => [1]
  */
-inline fun String.expandWith(extra: Char): List<String> {
+fun String.expandWith(extra: Char): List<String> {
     val result: List<String> = indices.map { idx ->
         StringBuilder(this).insertRange(idx, extra.toString(), 0, 1).toString()
     }

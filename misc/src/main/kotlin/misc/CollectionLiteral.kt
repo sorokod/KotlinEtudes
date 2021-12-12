@@ -1,4 +1,4 @@
-package language
+package misc
 
 object C {
     inline operator fun <T> get(vararg a: T) = listOf(*a)
