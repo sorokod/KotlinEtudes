@@ -3,6 +3,7 @@ package retrofittestdrive
 import io.github.resilience4j.retry.Retry
 import io.vavr.control.Try
 import retrofit2.*
+import java.lang.Exception
 import java.lang.reflect.Type
 
 
@@ -64,9 +65,14 @@ class ResilientCall<T>(
     }
 
     private fun exec() = run {
-        callDelegate.clone().execute().apply {
-            logFailed(this)
-            if (code().is5xx()) throw UnacceptableException(code(), className, methodName)
+        try {
+            callDelegate.clone().execute().apply {
+                logFailed(this)
+                if (code().is5xx()) throw UnacceptableException(code(), className, methodName)
+            }
+        } catch (e: Exception) {
+            println("EEE $e")
+            throw e
         }
     }
 
