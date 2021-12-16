@@ -1,14 +1,16 @@
 package retrofittestdrive
 
+import io.github.resilience4j.core.IntervalFunction
 import io.github.resilience4j.retry.Retry
+import io.github.resilience4j.retry.RetryConfig
 import io.vavr.control.Try
 import retrofit2.*
-import java.lang.Exception
 import java.lang.reflect.Type
 
 
 /**
- * We are joining two frameworks: retrofit2 - specifically CallAdapter.Factory() and resilience4j
+ * We are joining retrofit2 - specifically [CallAdapter.Factory()] and resilience4j
+ * retrofit2 is managing the HTTP call, resilience4j manages retries
  *
  * https://github.com/resilience4j/resilience4j
  */
@@ -22,10 +24,8 @@ class ResilientRetrofit : CallAdapter.Factory() {
 
         return object : CallAdapter<Any?, Any?> {
             override fun adapt(call: Call<Any?>): Any {
-                val invocation = call.request().tag(Invocation::class.java)!!
-                val className = invocation.method().declaringClass.simpleName
-                val methodName = invocation.method().name
-                return next.adapt(ResilientCall(className, methodName, callDelegate = call))!!
+                val invokedBy = call.request().tag(Invocation::class.java).getInvokerClassMethodArgs()
+                return next.adapt(ResilientCall(invokedBy, callDelegate = call))!!
             }
 
             override fun responseType() = next.responseType()
@@ -33,61 +33,55 @@ class ResilientRetrofit : CallAdapter.Factory() {
     }
 }
 
+
+private fun Int.is5xx() = this in 500 until 600
+
+
+private val retryConf = RetryConfig.custom<Response<*>>()
+    .maxAttempts(3)
+    .retryOnResult { response -> response.code().is5xx() }
+//        .intervalFunction(IntervalFunction.ofExponentialBackoff(500, 2.0)) // 500 , 2 * 500, ...
+    .intervalFunction(IntervalFunction.of(500)) // 500 , 500, ...
+    .build()
+
+
 /**
- * Retry only the calls that are in the 5XX range. Using the [code]UnacceptableException[code]
- * is clunky and ideally should be replaced with [code]RetryConfig.custom[code]:
- *
- * https://resilience4j.readme.io/docs/retry
- * val rConfig = RetryConfig.custom<Response<*>>()
- *    .maxAttempts(3)
- *    .waitDuration(Duration.ofMillis(500))
- *    .retryOnResult { response -> response.code() == 500 }
- *    .intervalFunction(IntervalFunction.of(...))
- *    .build()
- *
- *
+ * Retry all calls that result in 5xx errors or encounter
+ * an [Exception].
  */
 class ResilientCall<T>(
-    private val className: String,
-    private val methodName: String,
+    private val invokedBy: String,
     private val callDelegate: Call<T?>
 ) : Call<T?> by callDelegate {
 
-    // Retry 3 times x 500 ms.
+    // TODO reuse
     private val retry: Retry =
-        Retry.ofDefaults("$className.$methodName.${callDelegate.request().method().uppercase()}")
+        Retry.of("$invokedBy.${callDelegate.request().method().uppercase()}", retryConf)
 
-    override fun clone() = ResilientCall(className, methodName, callDelegate)
+    // TODO is this really needed ?
+    override fun clone() = ResilientCall(invokedBy, callDelegate)
 
     override fun execute(): Response<T?> {
-        val result = Try.of(Retry.decorateCheckedSupplier(retry, ::exec))
-        return result.get()
+        return Try.of(Retry.decorateCheckedSupplier(retry, ::exec)).get()
     }
 
     private fun exec() = run {
-        try {
-            callDelegate.clone().execute().apply {
-                logFailed(this)
-                if (code().is5xx()) throw UnacceptableException(code(), className, methodName)
-            }
-        } catch (e: Exception) {
-            println("EEE $e")
-            throw e
+        callDelegate.clone().execute().apply {
+            logIfNot2xx(this)
         }
     }
 
-    private fun Int.is5xx() = this in 500 until 600
 
-    private fun logFailed(response: Response<T?>) {
+    private fun logIfNot2xx(response: Response<T?>) {
         if (!response.isSuccessful) {
             println(
-                "XXX-logFailed $className.$methodName, status=${response.code()}, url=${request().url()}, method=${request().method()}, " +
+                "XXX-logFailed $invokedBy, status=${response.code()}, url=${request().url()}, method=${request().method()}, " +
                         "error_message=${response.errorBody()?.string() ?: "UNKNOWN"}"
             )
         }
     }
 }
 
-data class UnacceptableException(val code: Int, val className: String, val methodName: String) : RuntimeException()
+
 
 

@@ -74,7 +74,7 @@ internal class RetrofitTest {
      * No retries as a result of 404
      */
     @Test
-    fun `resilient - 404`() {
+    fun `resilient - 404 - fail after one attempt`() {
         val id = "not_good"
         mockServer.scenario_200("good")
 
@@ -85,23 +85,29 @@ internal class RetrofitTest {
     }
 
     /**
-     * Retry 3 times failing twice due to 500 error and suceeding
-     * on the third time when 200 is returned
+     * Retry 3 times failing twice due to 500 error, succeed
+     * the third time when 200 is returned
      */
     @Test
-    fun `resilient - 500`() {
+    fun `resilient - 500 - fail twice succeed on third`() {
         val id = "quirky"
         mockServer.scenario_500(id)
 
+        val start = System.currentTimeMillis()
         resilientClient.getLocal(id).execute().also { response ->
             assertEquals(200, response.code())
             assertEquals("finally_$id", response.body()!![0].name)
             mockServer.verify(request().withPath("/users/$id"), exactly(3))
         }
+        println("XXX DOne in (${System.currentTimeMillis() - start})")
     }
 
+    /**
+     * Retry 3 times failing twice due to an exception succeed
+     * the third time when 200 is returned
+     */
     @Test
-    fun `resilient - exception`() {
+    fun `resilient - exception - fail twice succeed on third`() {
         val id = "quirky"
         mockServer.scenario_exception(id)
 

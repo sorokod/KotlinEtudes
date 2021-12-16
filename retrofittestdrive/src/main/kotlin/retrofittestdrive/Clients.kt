@@ -12,7 +12,7 @@ import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
 
-fun <T> buildBaselineClient(service: Class<T>, baseUrl : String): T =
+fun <T> buildBaselineClient(service: Class<T>, baseUrl: String): T =
     Retrofit.Builder().apply {
         baseUrl(baseUrl)
         client(buildHttpClient(LoggingInterceptor()))
@@ -21,8 +21,7 @@ fun <T> buildBaselineClient(service: Class<T>, baseUrl : String): T =
     }.build().create(service)
 
 
-
-fun <T> buildResilientClient(service: Class<T>, baseUrl : String): T =
+fun <T> buildResilientClient(service: Class<T>, baseUrl: String): T =
     Retrofit.Builder().apply {
         baseUrl(baseUrl)
         client(buildHttpClient(LoggingInterceptor()))
@@ -46,6 +45,23 @@ private fun buildHttpClient(vararg interceptors: Interceptor): OkHttpClient =
 
 
 /**
+ * Returns a string representation of the invoker as ClassName.methodName(arguments)
+ * e.g.: LocalTestApi.getLocal([good])
+ */
+fun Invocation?.getInvokerClassMethodArgs(): String {
+    return this?.let { "${method().declaringClass.simpleName}.${method().name}(${arguments()})" } ?: ""
+}
+
+/**
+ * Same as above but without arguments
+ * e.g.: LocalTestApi.getLocal
+ */
+fun Invocation?.getInvokerClassMethod(): String {
+    return this?.let { "${method().declaringClass.simpleName}.${method().name}" } ?: ""
+}
+
+
+/**
  * A sample logging interceptor
  */
 class LoggingInterceptor : Interceptor {
@@ -66,15 +82,12 @@ class LoggingInterceptor : Interceptor {
 
 
     /**
-     * e.g: GitHubApi.listRepos([octocat]) - 200 in 453 ms
+     * e.g: GitHubApi.listRepos([octocat]) - 200 in 453 ms.
      */
     @ExperimentalTime
-    private fun toLogString(invocation: Invocation?, response: Response, duration: Duration): String {
-        return invocation?.let {
-            "${it.method().declaringClass.simpleName}.${it.method().name}(${it.arguments()})" +
-                    " - ${response.code()} in ${duration.inWholeMilliseconds} ms ."
-        } ?: ""
-    }
+    private fun toLogString(invocation: Invocation?, response: Response, duration: Duration): String =
+        invocation.getInvokerClassMethodArgs() + " - ${response.code()} in ${duration.inWholeMilliseconds} ms."
+
 
 }
 
