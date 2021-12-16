@@ -4,8 +4,12 @@ import io.github.resilience4j.core.IntervalFunction
 import io.github.resilience4j.retry.Retry
 import io.github.resilience4j.retry.RetryConfig
 import io.vavr.control.Try
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import retrofit2.*
 import java.lang.reflect.Type
+
+private val log = LoggerFactory.getLogger("Resilience")
 
 
 /**
@@ -74,9 +78,13 @@ class ResilientCall<T>(
 
     private fun logIfNot2xx(response: Response<T?>) {
         if (!response.isSuccessful) {
-            println(
-                "XXX-logFailed $invokedBy, status=${response.code()}, url=${request().url()}, method=${request().method()}, " +
-                        "error_message=${response.errorBody()?.string() ?: "UNKNOWN"}"
+            log.warn(
+                "{}, status={}, method={}, url={}, message={}",
+                invokedBy,
+                response.code(),
+                request().method(),
+                request().url(),
+                response.errorBody()?.string() ?: "UNKNOWN"
             )
         }
     }

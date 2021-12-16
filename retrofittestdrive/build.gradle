@@ -7,6 +7,16 @@ dependencies {
 
     implementation 'io.github.resilience4j:resilience4j-retry:1.7.1'
 
+    // Logging - bare basics INFO to stderr
+    implementation("org.slf4j:slf4j-api:1.7.32")
+    implementation("org.slf4j:slf4j-simple:1.7.32")
+
     testImplementation 'org.mock-server:mockserver-netty:5.11.2'
 
+}
+
+test {
+    systemProperty "org.slf4j.simpleLogger.log.org.mockserver", "warn"
+    systemProperty "org.slf4j.simpleLogger.showThreadName", "false"
+    systemProperty "org.slf4j.simpleLogger.levelInBrackets", "true"
 }

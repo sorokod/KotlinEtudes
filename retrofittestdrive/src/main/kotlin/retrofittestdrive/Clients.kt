@@ -4,13 +4,17 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import retrofit2.Invocation
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
+
+private val log: Logger = LoggerFactory.getLogger("Clients")
+
 
 fun <T> buildBaselineClient(service: Class<T>, baseUrl: String): T =
     Retrofit.Builder().apply {
@@ -62,11 +66,11 @@ fun Invocation?.getInvokerClassMethod(): String {
 
 
 /**
- * A sample logging interceptor
+ * Sample logging interceptor
  */
+@OptIn(ExperimentalTime::class)
 class LoggingInterceptor : Interceptor {
 
-    @ExperimentalTime
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request = chain.request()
 
@@ -74,20 +78,16 @@ class LoggingInterceptor : Interceptor {
             chain.proceed(request)
         }
         try {
-            println(toLogString(request.tag(Invocation::class.java), response, duration))
+            log.info(
+                "{} - HTTP {} in {} ms.",
+                request.tag(Invocation::class.java).getInvokerClassMethodArgs(),
+                response.code(),
+                duration.inWholeMilliseconds
+            )
         } finally {
         }
         return response
     }
-
-
-    /**
-     * e.g: GitHubApi.listRepos([octocat]) - 200 in 453 ms.
-     */
-    @ExperimentalTime
-    private fun toLogString(invocation: Invocation?, response: Response, duration: Duration): String =
-        invocation.getInvokerClassMethodArgs() + " - ${response.code()} in ${duration.inWholeMilliseconds} ms."
-
 
 }
 
