@@ -1,15 +1,22 @@
+ext {
+    retrofit2_version = "2.9.0"
+    resilience4j_version = "1.7.1"
+    slf4j_version = "1.7.32"
+}
+
+
 dependencies {
-    implementation('com.squareup.retrofit2:retrofit:2.9.0')
-    implementation('com.squareup.retrofit2:converter-gson:2.9.0')
+    implementation("com.squareup.retrofit2:retrofit:$retrofit2_version")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit2_version")
 
 //    jackson support requires a bit of extra work
-//    implementation('com.squareup.retrofit2:converter-jackson:2.9.0')
+//    implementation("com.squareup.retrofit2:converter-jackson:$retrofit2_version")
 
-    implementation 'io.github.resilience4j:resilience4j-retry:1.7.1'
+    implementation "io.github.resilience4j:resilience4j-retry:$resilience4j_version"
 
     // Logging - bare basics INFO to stderr
-    implementation("org.slf4j:slf4j-api:1.7.32")
-    implementation("org.slf4j:slf4j-simple:1.7.32")
+    implementation "org.slf4j:slf4j-api:$slf4j_version"
+    implementation "org.slf4j:slf4j-simple:$slf4j_version"
 
     testImplementation 'org.mock-server:mockserver-netty:5.11.2'
 
