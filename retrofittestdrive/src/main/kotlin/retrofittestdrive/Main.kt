@@ -5,16 +5,15 @@ import org.slf4j.LoggerFactory
 import retrofit2.Call
 
 
-private val logger: Logger = LoggerFactory.getLogger("Main")
+private val log: Logger = LoggerFactory.getLogger("Main")
 
 fun main() {
     val client = buildBaselineClient(GitHubApi::class.java, "https://api.github.com/")
     val call: Call<List<Repo>> = client.listRepos("octocat")
     val result: List<Repo>? = call.execute().body()
 
-    result?.forEachIndexed { i, repo ->
-        logger.info("$i) $repo")
-    } ?: logger.error("Result was null")
+    result?.forEachIndexed { i, repo -> log.info("$i) $repo") }
+        ?: log.error("Result was null")
 }
 
 

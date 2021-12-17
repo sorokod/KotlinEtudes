@@ -79,7 +79,8 @@ class LoggingInterceptor : Interceptor {
         }
         try {
             log.info(
-                "{} - HTTP {} in {} ms.",
+                "{} {} - HTTP {} in {} ms.",
+                request.method(),
                 request.tag(Invocation::class.java).getInvokerClassMethodArgs(),
                 response.code(),
                 duration.inWholeMilliseconds
