@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.5.32'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'java'
 }
 
@@ -41,11 +41,3 @@ allprojects {
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
     }
 }
-//
-//dependencies {
-////    implementation "org.jetbrains.kotlin:kotlin-stdlib"
-////    implementation 'org.junit.jupiter:junit-jupiter:5.8.2'
-////    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-////    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
-//}
-
