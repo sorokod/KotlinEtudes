@@ -1,13 +1,17 @@
 package misc.sudoku
 
+import misc.asResourceFile
 import java.io.File
 
-
-fun fromFile(filePath: String): Board {
-    return fromList(File(filePath).readLines())
+fun fromResourceFile(path: String): Board {
+    return fromList(path.asResourceFile().readLines())
 }
 
-fun fromMultiFile(filePath: String): List<Board> {
+fun fromFile(path: String): Board {
+    return fromList(File(path).readLines())
+}
+
+fun fromMultiFile(path: String): List<Board> {
     var key: String = ""
     fun keyFor(line: String): String {
         if (line.contains("Grid")) key = line
@@ -15,10 +19,10 @@ fun fromMultiFile(filePath: String): List<Board> {
     }
 
     var boards: MutableList<Board> = arrayListOf()
-    File(filePath)
-            .readLines()
-            .groupBy { keyFor(it) }
-            .values.forEach { boards.add(fromList(it.drop(1))) }
+    path.asResourceFile()
+        .readLines()
+        .groupBy { keyFor(it) }
+        .values.forEach { boards.add(fromList(it.drop(1))) }
 
     return boards
 }
@@ -27,11 +31,9 @@ fun fromMultiFile(filePath: String): List<Board> {
 fun fromList(rows: List<String>): Board {
     val values = Array(rows.size, { IntArray(rows.size) })
 
-    rows.forEachIndexed {
-        rowNum, row ->
-        row.forEachIndexed {
-            i, char ->
-            values[rowNum][i] = char.toInt() - '0'.toInt()
+    rows.forEachIndexed { rowNum, row ->
+        row.forEachIndexed { i, char ->
+            values[rowNum][i] = char.code - '0'.code
         }
     }
     return Board(values)
@@ -41,11 +43,11 @@ fun fromList(rows: List<String>): Board {
 fun main() {
     val solver = Solver()
 
-    val board = fromFile("resources/sudoku-difficult.txt")
+    val board = fromResourceFile("/sudoku-difficult.txt")
     solver.solve(board)
     board.print(System.out)
 
-    fromMultiFile("resources/p096_sudoku.txt").forEach {
+    fromMultiFile("/p096_sudoku.txt").forEach {
         solver.solve(it)
         it.print(System.out)
     }
