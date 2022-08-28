@@ -1,6 +1,7 @@
 package tuples
 
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.inspectors.forAll
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
@@ -10,11 +11,30 @@ import io.kotest.matchers.types.shouldNotBeTypeOf
 
 class TupleTest : FunSpec({
 
-    test("create tuple with explicit type") {
-        val (e1, e2) = Tuple2("tiger", 43)
+    test("tuple with explicit type") {
+        val (t1, t2) = Tuple2("tiger", 43)
 
-        e1 shouldBe "tiger"
-        e2 shouldBe 43
+        t1 shouldBe "tiger"
+        t2 shouldBe 43
+    }
+
+    test("tuple with implicit type") {
+        val (t1, t2) = Tuple.of("tiger", 43)
+
+        t1 shouldBe "tiger"
+        t2 shouldBe 43
+    }
+
+    test("explicitly typed tuples = implicitly typed tuples") {
+        listOf(
+            Tuple1("tiger") to Tuple.of("tiger"),
+            Tuple2("tiger", 42) to Tuple.of("tiger", 42),
+            Tuple3("tiger", 42, 1.0) to Tuple.of("tiger", 42, 1.0),
+            Tuple4("tiger", 42, 1.0, true) to Tuple.of("tiger", 42, 1.0, true),
+            Tuple5("tiger", 42, 1.0, true, 'z') to Tuple.of("tiger", 42, 1.0, true, 'z')
+        ).forAll { (explicitlyTypedTuple, implicitlyTypedTuple) ->
+            explicitlyTypedTuple shouldBe implicitlyTypedTuple
+        }
     }
 
     test("tuples play more or less nicely with when") {
@@ -29,8 +49,6 @@ class TupleTest : FunSpec({
     }
 
     test("create tuple with implicit type") {
-        Tuple.of("tiger", 43) shouldBe Tuple2("tiger", 43)
-
         Tuple.of("tiger", 43)
             .shouldBeInstanceOf<Tuple>()
             .shouldBeTypeOf<Tuple2<*, *>>()

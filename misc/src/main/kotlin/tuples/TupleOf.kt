@@ -1,5 +1,8 @@
 package tuples
 
+// Demo in:
+// https://github.com/sorokod/KotlinEtudes/blob/master/misc/src/test/kotlin/tuples/TupleTest.kt
+
 sealed class Tuple {
     companion object of {
         operator fun <A> invoke(_1: A): Tuple1<A> =
