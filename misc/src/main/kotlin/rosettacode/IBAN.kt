@@ -14,6 +14,11 @@ sealed class Outcome {
     data class Fail(val error: String) : Outcome()
 }
 
+fun Boolean.asOutcome(error: String = "") = when (this) {
+    true -> Ok
+    false -> Fail(error)
+}
+
 /**
  * A validator based on a pattern (e.g GB2!n4!a6!n8!n) as defined in the IBAN REGISTRY
  * Doesn't handle variable length IBANs - sufficient for Rosetta
@@ -25,8 +30,6 @@ class Validator(private val pattern: String) {
     private val rules: List<Regex>
 
     init {
-        val (_, tail) = pattern.split(2) // remove the Country Code (cc)
-
         val countTypePairs = triplet
             .findAll(pattern)
             .map { Pair(it.groups[1]!!.value.toInt(), it.groups[2]!!.value) }
@@ -52,11 +55,7 @@ class Validator(private val pattern: String) {
                 }
             }
         }
-
-        return when (k == ccbban.length) {
-            true -> Ok
-            false -> Fail("IBAN is too long")
-        }
+        return (k == ccbban.length).asOutcome("IBAN is too long")
     }
 }
 
@@ -69,13 +68,11 @@ fun Pair<String, String>.swap() = this.second + this.first
 object CDCheck {
     private val _97 = BigInteger.valueOf(97)
     private val _1 = BigInteger.ONE
-    operator fun invoke(digits: String) = when (BigInteger(digits).mod(_97) == _1) {
-        true -> Ok
-        false -> Fail("Invalid Check Digits")
-    }
+
+    operator fun invoke(digits: String) = (BigInteger(digits).mod(_97) == _1).asOutcome("Invalid Check Digits")
 }
 
-fun isValid(iban: String): Outcome {
+fun validate(iban: String): Outcome {
     val normalized = iban.replace(" ", "").uppercase().also {
         if (it.length < 5) {
             return Fail("IBAN is too short")
@@ -89,8 +86,8 @@ fun isValid(iban: String): Outcome {
         is Fail -> outcome
         is Ok -> {
             val allDigits = normalized
-                .split(4).swap() // move CC + CD to the end
-                .toDigits()
+                .split(4).swap() // (CC + CD) -> end
+                .toDigits()      // letters -> digits
             CDCheck(allDigits)
         }
     }
@@ -100,15 +97,15 @@ fun main() {
     Registry["GB"] = Validator("GB2!n4!a6!n8!n")
     Registry["DE"] = Validator("DE2!n8!n10!n")
 
-    isValid("GB82WEST12345698765432").also { println(it) } // Ok
-    isValid("GB82 WEST 1234 5698 7654 32").also { println(it) } // Ok
+    validate("GB82WEST12345698765432").also { println(it) } // Ok
+    validate("GB82 WEST 1234 5698 7654 32").also { println(it) } // Ok
 
-    isValid("DE89370400440532013000").also { println(it) } // Ok
+    validate("DE89370400440532013000").also { println(it) } // Ok
 
-    isValid("XX82WEST1234569A765432").also { println(it) } // Unknown Country Code: XX
-    isValid("GB82").also { println(it) } // IBAN is too short
-    isValid("GB82WEST1234569A765432").also { println(it) }  // failed rule: [0-9]{8}
-    isValid("GB82WE5T1234569A765432").also { println(it) }  // failed rule: [A-Z]{4}
-    isValid("GB82WEST123456987654329").also { println(it) } // IBAN is too long
-    isValid("GB80WEST12345698765432").also { println(it) }  // Invalid Check Digits
+    validate("XX82WEST1234569A765432").also { println(it) } // Unknown Country Code: XX
+    validate("GB82").also { println(it) } // IBAN is too short
+    validate("GB82WEST1234569A765432").also { println(it) }  // failed rule: [0-9]{8}
+    validate("GB82WE5T1234569A765432").also { println(it) }  // failed rule: [A-Z]{4}
+    validate("GB82WEST123456987654329").also { println(it) } // IBAN is too long
+    validate("GB80WEST12345698765432").also { println(it) }  // Invalid Check Digits
 }

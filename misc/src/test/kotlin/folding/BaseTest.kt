@@ -6,6 +6,12 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
+object FoldFunctions {
+    val sum: (Int, Int) -> Int = { i, j -> i + j }
+    val mul: (Int, Int) -> Int = { i, j -> i * j }
+}
+
+
 class BaseTest : FunSpec({
 
     test("fancy list creation") {
