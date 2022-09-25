@@ -1,4 +1,4 @@
-package misc
+package rosettacode
 
 /**
  * A recursive impl of Run Length Encoding
