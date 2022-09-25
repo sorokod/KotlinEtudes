@@ -2,10 +2,16 @@ package rosettacode.sorting
 
 import kotlin.math.ceil
 
+/**
+ * Split [list] into two (more or less) equal sized lists.
+ */
 fun split(list: List<Int>): List<List<Int>> =
     ceil(list.size / 2.0).toInt().let { idx -> list.chunked(idx) }
 
 
+/**
+ * Merge the sorted [left] and [right] lists into one sorted list.
+ */
 fun merge(left: List<Int>, right: List<Int>): List<Int> = mutableListOf<Int>().apply {
     var iLeft = 0
     var iRight = 0
@@ -34,9 +40,3 @@ fun mSort(list: List<Int>): List<Int> =
             merge(mSort(left), mSort(right))
         }
     }
-
-fun main(args: Array<String>) {
-    val numbers = listOf(5, 2, 3, 17, 12, 1, 8, 3, 4, 9, 7)
-    println("Unsorted: $numbers")
-    println("Sorted  : ${mSort(numbers)}")
-}
