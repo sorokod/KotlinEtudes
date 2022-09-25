@@ -1,11 +1,11 @@
-package misc
+package rosettacode
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
+import misc.rle
 
-
-class RleTestK : FunSpec({
+class RleTest : FunSpec({
 
     val testData = listOf(
         "TTESSST" to "2T1E3S1T",
@@ -13,15 +13,9 @@ class RleTestK : FunSpec({
         "kotlin" to "1k1o1t1l1i1n"
     )
 
-    test("rle test") {
-        testData.forAll { (input, expected) ->
-            rle(input) shouldBe expected
-        }
-    }
-
     test("rle_r test") {
         testData.forAll { (input, expected) ->
-            rle_r(input) shouldBe expected
+            rle(input) shouldBe expected
         }
     }
 
