@@ -1,35 +1,28 @@
 package misc
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.inspectors.forAll
+import io.kotest.matchers.shouldBe
 
-internal class RleTest {
 
-    companion object {
-        @JvmStatic
-        fun provideTestArguments() =
-            arrayOf(
-                Arguments.of("TTESSST", "2T1E3S1T"),
-                Arguments.of(
-                    "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWBWWWWWWWWWWWWWW",
-                    "12W1B12W3B24W1B14W"
-                ),
-                Arguments.of("kotlin", "1k1o1t1l1i1n")
-            )
+class RleTestK : FunSpec({
+
+    val testData = listOf(
+        "TTESSST" to "2T1E3S1T",
+        "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWBWWWWWWWWWWWWWW" to "12W1B12W3B24W1B14W",
+        "kotlin" to "1k1o1t1l1i1n"
+    )
+
+    test("rle test") {
+        testData.forAll { (input, expected) ->
+            rle(input) shouldBe expected
+        }
     }
 
-    @ParameterizedTest
-    @MethodSource("provideTestArguments")
-    fun `rle_r test`(text: String, expected: String) {
-        assertEquals(expected, rle(text))
+    test("rle_r test") {
+        testData.forAll { (input, expected) ->
+            rle_r(input) shouldBe expected
+        }
     }
 
-    @ParameterizedTest
-    @MethodSource("provideTestArguments")
-    fun `rle test`(text: String, expected: String) {
-        assertEquals(expected, rle_r(text))
-    }
-
-}
+})
