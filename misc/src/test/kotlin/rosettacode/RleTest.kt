@@ -12,7 +12,7 @@ class RleTest : FunSpec({
         "kotlin" to "1k1o1t1l1i1n"
     )
 
-    test("rle_r test") {
+    test("rle test") {
         testData.forAll { (input, expected) ->
             rle(input) shouldBe expected
         }
