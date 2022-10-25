@@ -1,12 +1,12 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
     id 'java'
 }
 
 ext {
     java_version = 11
     junit_version = "5.9.0"
-    kotest_version = "5.4.2"
+    kotest_version = "5.5.1"
 }
 
 
