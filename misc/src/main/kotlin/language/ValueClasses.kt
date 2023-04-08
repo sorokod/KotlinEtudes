@@ -1,21 +1,27 @@
 package language
 
-import java.util.UUID
+import java.util.*
 
 // ###############################################
 // https://kotlinlang.org/docs/inline-classes.html
+// see tests
 // ###############################################
 
-@JvmInline
-value class UserId(private val value: UUID)
+
+interface ID
 
 @JvmInline
-value class CustomerId(private val value: UUID) {
-
+value class XId(private val value: UUID) : ID {
     companion object {
-        fun rand(): CustomerId = CustomerId(UUID.randomUUID())
-        fun from(str: String): CustomerId = CustomerId(UUID.nameUUIDFromBytes(str.toByteArray()))
+        fun rand(): XId = XId(UUID.randomUUID())
+        fun from(str: String): XId = XId(UUID.nameUUIDFromBytes(str.toByteArray()))
     }
+}
 
-    fun versionAndVariant() = Pair(value.version(), value.variant())
+@JvmInline
+value class YId(private val value: UUID) : ID {
+    companion object {
+        fun rand(): YId = YId(UUID.randomUUID())
+        fun from(str: String): YId = YId(UUID.nameUUIDFromBytes(str.toByteArray()))
+    }
 }

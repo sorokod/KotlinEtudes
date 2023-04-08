@@ -10,30 +10,29 @@ import java.util.UUID
 
 class ValueClassesTest : FunSpec({
 
-    val id1 = UUID.randomUUID()
-    val id2 = UUID.randomUUID()
+    test("Equality behaves as expected") {
+        XId.from("hi") shouldBe XId.from("hi")
+        XId.from("hi").hashCode() shouldBe XId.from("hi").hashCode()
 
-    test("Equality Identity and Hash code") {
-        UserId(id1) shouldBe UserId(id1)
-        UserId(id1).hashCode() shouldBe UserId(id1).hashCode()
-
-        UserId(id1).hashCode() shouldNotBe UserId(id2).hashCode()
-
-        UserId(id1) shouldNotBe CustomerId(id1)
+        XId.from("hi") shouldNotBe XId.from("by")
     }
 
-    test("Sets behave as expected") {
-        setOf(UserId(id1),UserId(id1)) shouldHaveSize 1
+    test("Hashcode is shared with shared value") {
+        XId.from("hi").hashCode() shouldBe YId.from("hi").hashCode()
     }
 
-    test("Companion objects are supported") {
-        CustomerId.rand() shouldNotBe CustomerId.rand()
-        CustomerId.from("Alice") shouldNotBe CustomerId.from("Bob")
+
+    test("Sets of values behave as expected") {
+        val id = UUID.randomUUID()
+
+        setOf(XId(id), XId(id)) shouldHaveSize 1
+        setOf(XId(id), YId(id)) shouldHaveSize 2
     }
 
-    test("Functions are supported") {
-        CustomerId.rand().versionAndVariant() shouldBe Pair(4,2)
-        CustomerId.from("Alice").versionAndVariant() shouldBe Pair(3,2)
-    }
+    test("Companion.from(String) works as expected") {
+        val helloUUID = UUID.nameUUIDFromBytes("hello".toByteArray())
 
+        XId(helloUUID) shouldBe XId.from("hello")
+        YId(helloUUID) shouldBe YId.from("hello")
+    }
 })
