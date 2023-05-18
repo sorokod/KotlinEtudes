@@ -39,7 +39,7 @@ fun sumsRemainDistinct(candidate: Int, sequence: Iterable<Int>, mcSums: HashSet<
 
 fun mianChowla(n: Int): List<Int> {
     val mcSequence = linkedSetOf(1)
-    val mcSums = linkedSetOf(2)
+    val mcSums = linkedSetOf(1+1)
 
     var candidate = 2
     while (mcSequence.size < n) {
