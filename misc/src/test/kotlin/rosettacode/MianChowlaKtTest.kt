@@ -40,12 +40,12 @@ class MianChowlaKtTest : FunSpec({
         1312
     )
 
-    test("mianChowla 1-30") {
+    test("Mian Chowla 1-30") {
         mianChowlaOriginal(30) shouldBe expected_1_30
         mianChowla(30) shouldBe expected_1_30
     }
 
-    test("mianChowla 90-100") {
+    test("Mian Chowla 90-100") {
         mianChowlaOriginal(100).subList(90, 100) shouldBe expected_91_100
         mianChowla(100).subList(90, 100) shouldBe expected_91_100
     }
