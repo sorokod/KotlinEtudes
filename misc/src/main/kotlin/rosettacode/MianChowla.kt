@@ -22,7 +22,7 @@ import kotlin.system.measureTimeMillis
  * Check that summing with the [candidate] retains the goodness:
  * elements of [sums] remain distinct
  */
-fun sumsRemainDistinct(candidate: Int, seq: Iterable<Int>, sums: HashSet<Int>): Boolean {
+fun sumsRemainDistinct(candidate: Int, seq: Iterable<Int>, sums: MutableSet<Int>): Boolean {
     val candidateSums = mutableListOf<Int>()
 
     for (s in seq) {
