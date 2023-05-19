@@ -1,6 +1,5 @@
 package rosettacode
 
-import kotlin.math.tan
 import kotlin.system.measureTimeMillis
 
 //https://rosettacode.org/wiki/Mian-Chowla_sequence
@@ -28,7 +27,7 @@ fun sumsRemainDistinct(candidate: Int, seq: Iterable<Int>, sums: MutableSet<Int>
     for (s in seq) {
         when ((candidate + s) !in sums) {
             true -> candidateSums.add(candidate + s)
-            false -> return false
+            else -> return false
         }
     }
     with(sums) {
@@ -77,6 +76,16 @@ fun mianChowlaOriginal(n: Int): List<Int> {
     return mc
 }
 
+fun mianChowlaTiming(n: Int) {
+    measureTimeMillis {
+        mianChowla(n)
+    }.also { println("mianChowla($n) in: $it msec.") }
+
+    measureTimeMillis {
+        mianChowlaOriginal(n)
+    }.also { println("mianChowlaOriginal($n) in: $it msec.") }
+
+}
 
 fun main() {
 
@@ -91,18 +100,5 @@ fun main() {
 //        println("Mian-Chowla[91..100] = ${it.drop(90)}")
 //    }
 
-
-    // === Timing ===
-
-    val N = 200
-
-    measureTimeMillis {
-        mianChowla(N)
-    }.also { println("mianChowla($N) in: $it msec.") }
-
-
-
-    measureTimeMillis {
-        mianChowlaOriginal(N)
-    }.also { println("mianChowlaOriginal($N) in: $it msec.") }
+    mianChowlaTiming(300)
 }
