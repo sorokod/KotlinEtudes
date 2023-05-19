@@ -1,5 +1,6 @@
 package rosettacode
 
+import kotlin.math.tan
 import kotlin.system.measureTimeMillis
 
 //https://rosettacode.org/wiki/Mian-Chowla_sequence
@@ -17,20 +18,20 @@ import kotlin.system.measureTimeMillis
 
 
 /**
- * Assume that the [sequence] and its [mcSums] are good.
+ * Assume that the [seq] and its [sums] are good.
  * Check that summing with the [candidate] retains the goodness:
- * elements of [mcSums] remain distinct
+ * elements of [sums] remain distinct
  */
-fun sumsRemainDistinct(candidate: Int, sequence: Iterable<Int>, mcSums: HashSet<Int>): Boolean {
+fun sumsRemainDistinct(candidate: Int, seq: Iterable<Int>, sums: HashSet<Int>): Boolean {
     val candidateSums = mutableListOf<Int>()
 
-    for (s in sequence) {
-        when ((candidate + s) !in mcSums) {
+    for (s in seq) {
+        when ((candidate + s) !in sums) {
             true -> candidateSums.add(candidate + s)
             false -> return false
         }
     }
-    with(mcSums) {
+    with(sums) {
         addAll(candidateSums)
         add(candidate + candidate)
     }
@@ -38,17 +39,14 @@ fun sumsRemainDistinct(candidate: Int, sequence: Iterable<Int>, mcSums: HashSet<
 }
 
 fun mianChowla(n: Int): List<Int> {
-    val mcSequence = linkedSetOf(1)
-    val mcSums = linkedSetOf(1+1)
+    val bufferSeq = linkedSetOf<Int>()
+    val bufferSums = linkedSetOf<Int>()
 
-    var candidate = 2
-    while (mcSequence.size < n) {
-        if (sumsRemainDistinct(candidate, mcSequence, mcSums)) {
-            mcSequence.add(candidate)
-        }
-        candidate++
-    }
-    return mcSequence.toList()
+    val sequence = generateSequence(1) { it + 1 } // [1,2,3,..]
+        .filter { sumsRemainDistinct(it, bufferSeq, bufferSums) }
+        .onEach { bufferSeq.add(it) }
+
+    return sequence.take(n).toList()
 }
 
 
@@ -82,18 +80,29 @@ fun mianChowlaOriginal(n: Int): List<Int> {
 
 fun main() {
 
-    mianChowla(100).also {
-        println("Mian-Chowla[1..30] = ${it.take(30)}")
-        println("Mian-Chowla[91..100] = ${it.drop(90)}")
+    mianChowla(10).also {
+        println("Mian-Chowla(10) = $it")
     }
+//
+//
+//
+//    mianChowla(100).also {
+//        println("Mian-Chowla[1..30] = ${it.take(30)}")
+//        println("Mian-Chowla[91..100] = ${it.drop(90)}")
+//    }
+
+
+    // === Timing ===
+
+    val N = 200
+
+    measureTimeMillis {
+        mianChowla(N)
+    }.also { println("mianChowla($N) in: $it msec.") }
+
 
 
     measureTimeMillis {
-        mianChowla(10).also { println(it) }
-    }.also { println(it) }
-
-
-    measureTimeMillis {
-        mianChowlaOriginal(30).also { println(it) }
-    }.also { println(it) }
+        mianChowlaOriginal(N)
+    }.also { println("mianChowlaOriginal($N) in: $it msec.") }
 }
