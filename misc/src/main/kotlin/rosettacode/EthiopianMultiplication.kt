@@ -9,7 +9,9 @@ fun Int.isOdd() = this and 1 == 1
 
 fun ethiopianMultiply(n: Int, m: Int): Int =
     generateSequence(Pair(n, m)) { p -> Pair(p.first.halve(), p.second.double()) }
-        .takeWhile { it.first >= 1 }.filter { it.first.isOdd() }.sumOf { it.second }
+        .takeWhile { it.first >= 1 }
+        .filter { it.first.isOdd() }
+        .sumOf { it.second }
 
 
 fun main() {
