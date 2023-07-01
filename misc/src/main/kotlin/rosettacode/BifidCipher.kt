@@ -12,25 +12,24 @@ data class Square(private val square: String) {
     fun decode(row: Int, col: Int): Char = square[row * dim + col]
 }
 
-
-class Bifid(private val sq: Square) {
+class Bifid(private val square: Square) {
     fun encrypt(str: String): String {
         fun expandAndScatter(str: String): IntArray {
             val buffer = IntArray(str.length * 2)
             str.forEachIndexed { i, ch ->
-                val (row, col) = sq.encode(ch)
-                buffer[i] = row
-                buffer[str.length + i] = col
+                with(square.encode(ch)) {
+                    buffer[i] = first
+                    buffer[str.length + i] = second
+                }
             }
             return buffer
         }
-
 
         val buffer = expandAndScatter(str)
 
         val characters: List<Char> = buffer.asIterable()
             .windowed(size = 2, step = 2)
-            .map { sq.decode(it) }
+            .map { square.decode(it) }
 
         return String(characters.toCharArray())
     }
@@ -39,9 +38,10 @@ class Bifid(private val sq: Square) {
         fun expand(str: String): IntArray {
             val buffer = IntArray(str.length * 2)
             for (i in buffer.indices step 2) {
-                val (row, col) = sq.encode(str[i / 2])
-                buffer[i] = row
-                buffer[1 + i] = col
+                with(square.encode(str[i / 2])) {
+                    buffer[i] = first
+                    buffer[1 + i] = second
+                }
             }
             return buffer
         }
@@ -50,27 +50,29 @@ class Bifid(private val sq: Square) {
 
         val characters = str.toCharArray()
         for (i in characters.indices) {
-            characters[i] = sq.decode(buffer[i], buffer[characters.size + i])
+            characters[i] = square.decode(buffer[i], buffer[characters.size + i])
         }
         return String(characters)
     }
 }
 
-
 fun main() {
-    val bifidABC_5x5 = Bifid(Square("ABCDEFGHIKLMNOPQRSTUVWXYZ"))
-    val bifidABC_6x6 = Bifid(Square("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"))
-    val bifidBGW_5x5 = Bifid(Square("BGWKZQPNDSIOAXEFCLUMTHYVR"))
+    with (Bifid(Square("ABCDEFGHIKLMNOPQRSTUVWXYZ"))) {
+        println("\n### ABC... 5x5")
+        encrypt("ATTACKATDAWN").also { println("ATTACKATDAWN -> $it") }
+        decrypt("DQBDAXDQPDQH").also { println("DQBDAXDQPDQH -> $it") }
+    }
+    with(Bifid(Square("BGWKZQPNDSIOAXEFCLUMTHYVR"))) {
+        println("\n### BGW... 5x5")
+        encrypt("FLEEATONCE").also { println("FLEEATONCE -> $it") }
+        decrypt("UAEOLWRINS").also { println("UAEOLWRINS -> $it") }
 
-    bifidABC_5x5.encrypt("ATTACKATDAWN").also { println("$it") }
-    bifidABC_5x5.decrypt("DQBDAXDQPDQH").also { println("$it") }
-
-    bifidBGW_5x5.encrypt("FLEEATONCE").also { println("$it") }
-    bifidBGW_5x5.decrypt("UAEOLWRINS").also { println("$it") }
-
-    bifidBGW_5x5.encrypt("ATTACKATDAWN").also { println("$it") }
-    bifidBGW_5x5.decrypt("EYFENGIWDILA").also { println("$it") }
-
-    bifidABC_6x6.encrypt("THEINVASIONWILLSTARTONTHEFIRSTOFJANUARY").also { println("$it") }
-    bifidABC_6x6.decrypt("TBPDIPHJSPOTAIVMGPCZKNSCN09BFIHK64I7BM4").also { println("$it") }
+        encrypt("ATTACKATDAWN").also { println("ATTACKATDAWN -> $it") }
+        decrypt("EYFENGIWDILA").also { println("EYFENGIWDILA -> $it") }
+    }
+    with(Bifid(Square("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"))) {
+        println("\n### ABC... 6x6")
+        encrypt("THEINVASIONWILLSTARTONTHEFIRSTOFJANUARY").also { println("$it") }
+        decrypt("TBPDIPHJSPOTAIVMGPCZKNSCN09BFIHK64I7BM4").also { println("$it") }
+    }
 }
