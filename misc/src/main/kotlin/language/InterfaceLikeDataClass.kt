@@ -1,9 +1,12 @@
 package language
 
 /**
- * Enforces certain combinations of null / non-null arguments.
+ * A date like data structure.
+ * Hides the standard data class constructor and enforces certain combinations of null / non-null arguments.
  *
- */
+ * A data class cannot be extended, a sealed interface cannot be implemented outside its module
+ **/
+
 sealed interface ADate {
     val year: Int
     val month: Int?
@@ -19,12 +22,9 @@ sealed interface ADate {
         operator fun invoke(year: Int, month: Int, day: Int): ADate = Impl(year, month, day)
     }
 
-    private data class Impl(override val year: Int, override val month: Int?, override val day: Int?) : ADate
-}
-
-fun main() {
-    ADate(2023).also { println(it) }
-
-    ADate(2023,11).also { println(it) }
-    ADate(2023,11, 9).also { println(it) }
+    private data class Impl(
+        override val year: Int,
+        override val month: Int?,
+        override val day: Int?
+    ) : ADate
 }
