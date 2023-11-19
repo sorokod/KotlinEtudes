@@ -1,0 +1,4 @@
+package proptesing
+
+class PropTesting {
+}
