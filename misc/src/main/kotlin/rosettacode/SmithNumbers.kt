@@ -1,0 +1,4 @@
+package rosettacode
+
+class SmithNumbers {
+}
