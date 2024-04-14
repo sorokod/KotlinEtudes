@@ -1,74 +1,89 @@
 package datastructs.heap
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.equals.shouldBeEqual
+import io.kotest.matchers.shouldBe
 import kotlin.random.Random
 
-class BinHeapTest {
-
-    @Test
-    fun `random Int test`() {
-        val heap = BinHeap<Int>()
-        val data = Array(1_000) { Random.nextInt(-1_000, 1_000) }
-
-        // add data to the heap
-        data.forEach { heap.add(it) }
-
-        let { // peek() test
-            val expected = data.minOrNull()
-            val actual = heap.peek()
-            assertEquals(expected, actual)
-        }
-
-        let { // sorted test
-            val expected = data.sorted()
-            val actual = drainHeap(heap)
-            assertEquals(expected, actual)
-        }
-    }
-
-    @Test
-    fun `strings test`() {
-        val heap = BinHeap<String>()
-        val data = arrayOf("fifteen", "five", "eleven", "three", "four", "eight", "a", "bb")
-
-        // add data to the heap
-        data.forEach { heap.add(it) }
-
-        let { // peek() test
-            val expected = "a"
-            val actual = heap.peek()
-            assertEquals(expected, actual)
-        }
-
-        let { // sorted test
-            val expected = data.sorted()
-            val actual = drainHeap(heap)
-            assertEquals(expected, actual)
-        }
-    }
-
-    @Test
-    fun `readme test`() {
-        val minHeap = BinHeap<Int>()
-        val data = Array(1_000) { Random.nextInt(-1_000, 1_000) }
-
-        // add data to heap
-        data.forEach { minHeap.add(it) }.apply {
-            assertTrue(minHeap.size() == data.size)
-        }
-
-        // remove all the elements from the heap and verify that the
-        // result is sorted
-        List(minHeap.size()) { minHeap.remove() }.apply {
-            assertTrue(minHeap.isEmpty())
-            assertEquals(data.sorted(), this)
-        }
-    }
+class BinHeapTest : StringSpec({
 
     /**
-     * Repeatedly removes the root element from the heap into a list, until the heap is empty.
+     * Repeatedly remove the root element from the [heap] into a list until the heap is empty.
      */
-    private fun <T : Comparable<T>> drainHeap(heap: BinHeap<T>) = List(heap.size()) { heap.remove() }
-}
+    fun <T : Comparable<T>> _drainHeap(heap: BinHeap<T>): List<T> =
+        List(heap.size) { heap.remove() }
+
+
+    fun <T : Comparable<T>> BinHeap<T>.fillWith(data: Array<T>) =
+        data.onEach { this.add(it) }
+
+    fun _dataInts(size: Int = 100): Array<Int> =
+        Array(size) { Random.nextInt(-1_000, 1_000) }
+
+    fun _dataStrings(): Array<String> =
+        arrayOf("fifteen", "five", "eleven", "three", "four", "eight", "a", "bb")
+
+    "peek strings" {
+        val heap = BinHeap<String>().also {
+            it.fillWith(_dataStrings())
+        }
+
+        heap.peek() shouldBe "a"
+    }
+
+    "peek ints 7" {
+        val heap = BinHeap<Int>()
+        heap.add(7)
+
+        heap.peek() shouldBe 7
+    }
+
+    "peek ints -7" {
+        val heap = BinHeap<Int>().also { it.fillWith(arrayOf(-7, 7)) }
+
+        heap.peek() shouldBe -7
+    }
+
+    "peek ints 100" {
+        val data = _dataInts(100)
+        val heap = BinHeap<Int>().also { it.fillWith(data) }
+
+        val expectedMin = data.minOrNull()!!
+
+        heap.peek() shouldBeEqual expectedMin
+    }
+
+    "peek ints sort" {
+        val data = _dataInts(10)
+        val heap = BinHeap<Int>().also { it.fillWith(data) }
+
+
+        val actual = _drainHeap(heap)
+        actual shouldBe data.sorted()
+    }
+
+    "properties" {
+
+        with(BinHeap<String>()) {
+            empty shouldBe true
+            size shouldBe 0
+        }
+
+        with(BinHeap<Int>().also { it.add(1) }) {
+            empty shouldBe false
+            size shouldBe 1
+        }
+
+        with(BinHeap<Int>().also { it.fillWith(arrayOf(1, 1)) }) {
+            empty shouldBe false
+            size shouldBe 2
+        }
+
+        with(BinHeap<Int>().also { it.fillWith(_dataInts(100)) }) {
+            empty shouldBe false
+            size shouldBe 100
+        }
+    }
+
+
+})

@@ -7,15 +7,17 @@ class BinHeap<T : Comparable<T>>(initialCapacity: Int = 100) {
 
     private val tree = CompleteBinTree<T>(initialCapacity)
 
-    fun add(value: T) = tree.addLeaf(value).also { bubbleUp(index = size()) }
+    fun add(value: T) = tree.addLeaf(value).also { bubbleUp(index = size) }
 
     fun remove(): T = tree.removeRoot().also { bubbleDown(index = 1) }
 
     fun peek(): T = tree.rootValue()
 
-    fun isEmpty() = tree.isEmpty()
+    val empty: Boolean
+        get() = tree.empty
 
-    fun size() = tree.size()
+    val size: Int
+        get() = tree.size
 
 
     /**
@@ -44,8 +46,8 @@ class BinHeap<T : Comparable<T>>(initialCapacity: Int = 100) {
 
 
 /**
- * A "complete binary tree" with an array representation (see indexOfXXX() functions) . Elements are populated
- * from index = 1
+ * A "complete binary tree" with an array representation (see indexOfXXX() functions) .
+ * Elements are populated from index = 1
  *
  * It is a binary tree in which all the levels are completely filled except possibly
  * the lowest one, which is filled from the "right".
@@ -54,6 +56,12 @@ internal class CompleteBinTree<T : Comparable<T>>(initialCapacity: Int) {
 
     private var elementCount = 0
     private var array: Array<T?> = arrayOfNulls<Comparable<T>>(initialCapacity) as Array<T?>
+
+    val empty: Boolean
+        get() = elementCount == 0
+
+    val size: Int
+        get() = elementCount
 
 
     /**
@@ -71,11 +79,6 @@ internal class CompleteBinTree<T : Comparable<T>>(initialCapacity: Int) {
         array[1] = array[elementCount]
         array[elementCount--] = null
     }
-
-    fun isEmpty() = elementCount == 0
-
-    fun size() = elementCount
-
     private fun ensureCapacity() {
         if (elementCount >= array.lastIndex) {
             array = array.copyOf(array.size * 2)
@@ -104,11 +107,11 @@ internal class CompleteBinTree<T : Comparable<T>>(initialCapacity: Int) {
     }
 
 
-    internal fun swapWithParent(i: Int) {
-        val parent = indexOfParent(i)
-        val tmp = array[i]
-        array[i] = array[parent]
-        array[parent] = tmp
+    internal fun swapWithParent(idx: Int) {
+        val parentIdx = indexOfParent(idx)
+        val idxValue = array[idx]
+        array[idx] = array[parentIdx]
+        array[parentIdx] = idxValue
     }
 
 
