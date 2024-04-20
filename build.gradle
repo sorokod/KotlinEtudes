@@ -27,7 +27,10 @@ allprojects {
         mavenCentral()
     }
 
-    sourceCompatibility = java_version
+    java {
+        sourceCompatibility = java_version
+    }
+
     compileKotlin {
         kotlinOptions.jvmTarget = java_version
     }
@@ -52,12 +55,11 @@ allprojects {
             .configureEach {compilerOptions.languageVersion = KOTLIN_1_9}
 
     dependencies {
-        implementation("org.apache.commons:commons-math3:3.6.1")
-
-        testImplementation "io.kotest:kotest-runner-junit5:$kotest_version"
-        testImplementation "io.kotest:kotest-assertions-core-jvm:$kotest_version"
-        testImplementation("io.kotest:kotest-property:$kotest_version")
-        testImplementation("io.kotest:kotest-framework-datatest:$kotest_version")
-
+        //see settings.gradle
+        implementation(libs.commons.math3)
+        implementation(libs.kotest.runner.junit5)
+        implementation(libs.kotest.assertions.core.jvm)
+        implementation(libs.kotest.property)
+        implementation(libs.kotest.framework.datatest)
     }
 }
