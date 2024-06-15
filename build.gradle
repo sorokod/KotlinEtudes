@@ -7,10 +7,9 @@ plugins {
     id 'java'
 }
 
+
 ext {
     java_version = 21
-    junit_version = "5.9.0"
-    kotest_version = "5.8.1"
 }
 
 
@@ -41,25 +40,12 @@ allprojects {
         useJUnitPlatform()
     }
 
-    task printAllDependencies(type: DependencyReportTask) {}
-
-
-//    kotlin {
-//        compilerOptions {
-//            languageVersion.set(KOTLIN_1_9)
-//            apiVersion.set(KOTLIN_1_9)
-//        }
-//    }
-
     tasks.withType(KotlinCompilationTask.class)
             .configureEach {compilerOptions.languageVersion = KOTLIN_1_9}
 
     dependencies {
         //see settings.gradle
         implementation(libs.commons.math3)
-        implementation(libs.kotest.runner.junit5)
-        implementation(libs.kotest.assertions.core.jvm)
-        implementation(libs.kotest.property)
-        implementation(libs.kotest.framework.datatest)
+        implementation(libs.bundles.kotest)
     }
 }
