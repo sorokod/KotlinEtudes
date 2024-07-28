@@ -1,18 +1,20 @@
 package rosettacode
 
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
 
-class RleTest : FunSpec({
+class RleTest : StringSpec({
 
     val testData = listOf(
+        "" to "",
         "TTESSST" to "2T1E3S1T",
-        "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWBWWWWWWWWWWWWWW" to "12W1B12W3B24W1B14W",
-        "kotlin" to "1k1o1t1l1i1n"
+        "rosetta" to "1r1o1s1e2t1a",
+        "kotlin" to "1k1o1t1l1i1n",
+        "3333" to "43"
     )
 
-    test("rle test") {
+    "rle test" {
         testData.forAll { (input, expected) ->
             rle(input) shouldBe expected
         }
