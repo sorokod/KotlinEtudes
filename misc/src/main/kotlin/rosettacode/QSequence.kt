@@ -11,7 +11,7 @@ fun Q(n: Int): List<Int> {
         it[1] = 1
         it[2] = 1
     }
-    val result = q(n, mem)
+    q(n, mem)
     return mem.values.toList()
 }
 
