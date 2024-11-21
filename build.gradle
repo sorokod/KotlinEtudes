@@ -10,7 +10,7 @@ plugins {
 
 
 ext {
-    java_version = 21
+    java_version = 22
 }
 
 
@@ -33,13 +33,13 @@ allprojects {
 
     compileKotlin {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
+            jvmTarget.set(JvmTarget.JVM_22)
         }
     }
 
     compileTestKotlin {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
+            jvmTarget.set(JvmTarget.JVM_22)
         }
     }
 
