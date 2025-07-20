@@ -12,8 +12,8 @@ import java.util.Locale
  * them to a standardized year-month format suitable for time series analysis.
  * Uses Kotlin's built-in date/time parsing to avoid static month mappings.
  *
- * @param dateStr The input date string in "MMM DD, YYYY" format (e.g., "Oct 2, 2024")
- * @return The transformed date string in "YYYY-MM" format (e.g., "2024-10")
+ * @param [dateStr] Input date string in "MMM DD, YYYY" format (e.g., "Oct 2, 2024")
+ * @return A date string in "YYYY-MM" format (e.g., "2024-10")
  *
  * @sample
  * ```kotlin
@@ -40,13 +40,9 @@ fun datesAsYYYYMM(dateStr: String): String {
 
 
 /**
- * Safely converts any value to a Double, handling invalid inputs as 0.0.
+ * Safely converts Any? value to a Double, treating invalid inputs as 0.0.
  *
- * This utility function converts any type to Double by first converting to string,
- * then parsing as a number. Designed for parsing numeric data from DataFrames where
- * values might be of various types or contain invalid/missing data.
- *
- * @param value The value to convert to Double (may be of any type or null)
+ * @param [value] The value to convert to Double (may be of any type or null)
  * @return A Double value: the parsed number if valid, or 0.0 if null/invalid
  *
  * @sample
@@ -60,14 +56,14 @@ fun datesAsYYYYMM(dateStr: String): String {
  * anyToDouble(3.14159)   // returns 3.14159
  * ```
  *
- * This function is particularly useful when processing DataFrame columns where
- * cell values might be strings, numbers, or other types that need standardization.
  */
 fun anyToDouble(value: Any?): Double {
-    val strValue = value?.toString()
-
-    if (strValue == null) {
-        return 0.0
+    val dbl = "$value".toDoubleOrNull()
+    return if (dbl == null || dbl.isNaN() || dbl.isInfinite()) {
+        0.0
+    } else {
+        dbl
     }
-    return strValue.toDoubleOrNull() ?: 0.0
 }
+
+

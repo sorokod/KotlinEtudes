@@ -1,7 +1,6 @@
 rootProject.name = "Etudes"
 
 include("misc")
-include("retrofittestdrive")
 
 // see https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog-declaration
 dependencyResolutionManagement {
@@ -12,14 +11,14 @@ dependencyResolutionManagement {
             // ## Versions
             // ##########################################################
             
-            version("commons-math-ver", "3.6.1")
+            version("apache-commons", "3.6.1")
             version("kotest-ver", "5.9.1")
             
             // ##########################################################
             // ## Libraries
             // ##########################################################
             
-            library("commons-math3", "org.apache.commons", "commons-math3").versionRef("commons-math-ver")
+            library("commons-math3", "org.apache.commons", "commons-math3").versionRef("apache-commons")
             
             library("kotest-runner-junit5", "io.kotest", "kotest-runner-junit5").versionRef("kotest-ver")
             library("kotest-assertions-core-jvm", "io.kotest", "kotest-assertions-core-jvm").versionRef("kotest-ver")
